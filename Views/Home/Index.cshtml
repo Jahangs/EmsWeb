@@ -1,0 +1,43 @@
+﻿@model EmsWeb.Models.Configs
+@{
+    ViewData["Title"] = "Grid Configuration";
+}
+
+
+ 
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="/css/site.css" /> 
+    
+    <link href="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"  type="text/javascript"  />
+    <link href="/lib/jquery/dist/jquery.min.js"  type="text/javascript"  />  
+    <script src="/js/site.js" asp-append-version="true"  type="text/javascript" ></script>    
+
+
+
+  
+  <h1>EMS Web Interface</h1>
+
+         <table style="width: auto;">
+            <tr>                
+                <td style="width: 125px;"><input type="submit" id="btn_on_grid" value="ON Grid" class="submit" onclick="SetOnGrid()"/></td>
+        <td style="width: 20px;"></td>
+                <td style="width: 500px;"> To send OnGrid command press this button</td>
+            </tr>
+
+    <tr>
+        <td style="width: 125px;"><input type="submit" id="btn_off_grid" value="OFF Grid" class="submit" onclick="SetOffGrid()" /></td>
+        <td style="width: 20px;"></td>
+        <td style="width: 500px;"> To send OffGrid command press this button</td>
+    </tr>
+
+    <tr>
+        <td style="width: 125px;"><input type="submit" id="btn_start_converter" value="Start Converter" class="submit" onclick="SetStartConverter()" /></td>
+        <td style="width: 20px;"></td>
+        <td style="width: 500px;"> To send Start Converter command press this button</td>
+    </tr>
+    <tr>
+        <td style="width: 125px;"><input type="submit" id="btn_stop_converter" value="Stop Converter" class="submit" onclick="SetStopConverter()" /></td>
+        <td style="width: 20px;"></td>
+        <td style="width: 500px;"> To send Stop Converter command press this button</td>
+    </tr>
+        </table>
