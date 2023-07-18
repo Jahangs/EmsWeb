@@ -26,7 +26,7 @@ namespace EmsWeb.Controllers
 {
     public class HomeController : Controller
     {
-
+        //test
         private static EmsConfiguration EmsConfiguration { get; set; }
         public IConfiguration Configuration { get; set; }
         private readonly ILogger<HomeController> _logger;
