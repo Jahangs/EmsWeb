@@ -4,40 +4,72 @@
 }
 
 
- 
-    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="/css/site.css" /> 
-    
-    <link href="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"  type="text/javascript"  />
-    <link href="/lib/jquery/dist/jquery.min.js"  type="text/javascript"  />  
-    <script src="/js/site.js" asp-append-version="true"  type="text/javascript" ></script>    
+
+<link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css" />
+<link rel="stylesheet" href="/css/site.css" />
+
+<link href="/lib/bootstrap/dist/js/bootstrap.bundle.min.js" type="text/javascript" />
+<link href="/lib/jquery/dist/jquery.min.js" type="text/javascript" />
+<link href="/lib/jquery/dist/jquery.js" type="text/javascript" />
+<script src="/js/site.js" asp-append-version="true" type="text/javascript"></script>
+<script language="JavaScript" type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
 
 
 
-  
-  <h1>EMS Web Interface</h1>
 
-         <table style="width: auto;">
-            <tr>                
-                <td style="width: 125px;"><input type="submit" id="btn_on_grid" value="ON Grid" class="submit" onclick="SetOnGrid()"/></td>
-        <td style="width: 20px;"></td>
-                <td style="width: 500px;"> To send OnGrid command press this button</td>
-            </tr>
+@*  <h1>EMS Web</h1>*@
 
+<br />
+
+<table style="width: auto;">
+
+    @* Current mode ---------------------------------------------------------------------------*@
     <tr>
-        <td style="width: 125px;"><input type="submit" id="btn_off_grid" value="OFF Grid" class="submit" onclick="SetOffGrid()" /></td>
-        <td style="width: 20px;"></td>
-        <td style="width: 500px;"> To send OffGrid command press this button</td>
+        <td style="width: 125px;padding-top:20px;font-weight:bold;"> Current mode : </td>
+        <td id="txt_current_mode" style="width: 500px;padding-top:20px;font-weight:bold;padding-left:20px;"> ON Grid </td>
+    </tr>
+    @* System status ---------------------------------------------------------------------------*@
+    <tr>
+        <td style="width: 125px;padding-top:20px;font-weight:bold;"> System status : </td>
+        <td id="txt_system_status" style="width: 500px;padding-top:20px;font-weight:bold;padding-left:20px;"> OffGrid is operational </td>
+    </tr>
+    <tr>
+        <td style="width: 125px;padding-top:30px;font-weight:bold;">
+            <input type="submit" id="btn_off_grid" value="Start OFF Grid" class="submit" onclick="SetOffGrid()" />
+        </td>
+        <td style="width: 125px;padding-top:30px;padding-left:20px;font-weight:bold;">
+            <input type="submit" id="btn_on_grid" value="Start ON Grid" class="submit" onclick="SetOnGrid()" />
+        </td>
+
+    </tr>
+</table>
+@*####################################################################################################################################################*@
+@* OffGrid ---------------------------------------------------------------------------*@
+
+<table id="tbl_off_grid" style="width: auto;">
+    <tr>
+        <td colspan="3" style="width: auto;padding-top:50px;font-weight:bold;color:darkcyan;">1. Disconnect the Grid</td>
     </tr>
 
     <tr>
-        <td style="width: 125px;"><input type="submit" id="btn_start_converter" value="Start Converter" class="submit" onclick="SetStartConverter()" /></td>
-        <td style="width: 20px;"></td>
-        <td style="width: 500px;"> To send Start Converter command press this button</td>
+        <td colspan="3" style="width:auto;padding-top:10px;font-weight:bold;color:darkcyan;">2. Check AC Under Voltage on all converters and L1, L2, L3 must be less than 10</td>
     </tr>
+    <tr style="padding-top:20px">
+        <td style="width:400px;padding-top:10px;font-weight:bold;color:darkcyan;">3. Do you confirm to continue the OFF Grid Mode?</td>
+        <td style="width:auto;padding-left:0px;">
+            <input type="submit" id="btn_confirm_off_grid" value="Confirm" class="submit" onclick="ConfirmOffGrid()" />
+        </td>
+        <td style="width:auto;padding-left:10px;">
+            <input type="submit" id="btn_cancel_off_grid" value="Cancel" class="submit" onclick="CancelOffGrid()" />
+        </td>
+    </tr>
+</table>
+@*####################################################################################################################################################*@
+@* OnGrid ---------------------------------------------------------------------------*@
+
+<table id="tbl_on_grid" style="width: auto;">
     <tr>
-        <td style="width: 125px;"><input type="submit" id="btn_stop_converter" value="Stop Converter" class="submit" onclick="SetStopConverter()" /></td>
-        <td style="width: 20px;"></td>
-        <td style="width: 500px;"> To send Stop Converter command press this button</td>
+        <td colspan="3" style="width: auto;padding-top:50px;font-weight:bold;color:darkcyan;">Welcome to the ON Grid mode</td>
     </tr>
-        </table>
+</table>
+@*####################################################################################################################################################*@

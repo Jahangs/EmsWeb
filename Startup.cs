@@ -20,10 +20,7 @@ namespace EmsWeb
         public IConfiguration Configuration { get; }
 
         public static string _data = ""; // Always start application with OnGrid mode
-        //public static string OnGrid = "";
-        //public static string OffGrid = "";
-        //public static string StartConverter = "";
-        //public static string StopConverter = "";
+        public static string EmsLogs = "";
         //---------------------------------------------------------------------
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {

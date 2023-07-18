@@ -1,34 +1,46 @@
-﻿//-----------------------------------------------------------------------------
-// OnGrid = 0
-// OffGrid = 1
-// Start Converter = 2
-// Stop Converter = 3
-//-----------------------------------------------------------------------------
-function SetOnGrid()
-{
-    alert("OnGrid is sent");
+﻿
 
-    $.get("Home/ActiveOnGrid?_data=0"); 
+//-----------------------------------------------------------------------------
+$(document).ready(function () {
+    document.getElementById('tbl_off_grid').hidden = true;
+    document.getElementById('tbl_on_grid').hidden = false;
+});
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+function SetOnGrid() {
+
+    document.getElementById('tbl_off_grid').hidden = true;
+    document.getElementById('tbl_on_grid').hidden = false;
+
+    //$.get("Home/ActiveOnGrid?_data=1"); 
 }
 //-----------------------------------------------------------------------------
-function SetOffGrid()
-{
-    alert("OffGrid is sent");
+function SetOffGrid() {
+    document.getElementById('tbl_on_grid').hidden = true;
+    document.getElementById('tbl_off_grid').hidden = false;
 
-    $.get("Home/ActiveOffGrid?_data=1");
+    //$.get("Home/ActiveOffGrid?_data=0");
 }
 //-----------------------------------------------------------------------------
-function SetStartConverter()
-{
-    alert("Start Converter is sent");
+// Use a timer here to read 
+setInterval(UpdatePageData, 2000);
 
-    $.get("Home/ActiveStartConverter?_data=2");
+function UpdatePageData() {
+    $.ajax({
+        url: "Home/UpdatePageData",
+        type: "POST",
+        data: {
+        },
+        success: function (data) {
+            //  alert(data);
+            //  $('#txt_system_status').text(data);
+
+            document.getElementById('txt_system_status').innerHTML = data;
+
+
+        }
+    });
 }
 //-----------------------------------------------------------------------------
-function SetStopConverter()
-{
-    alert("Stop Converter is sent");
 
-    $.get("Home/ActiveStopConverter?_data=3");
-}
 //-----------------------------------------------------------------------------

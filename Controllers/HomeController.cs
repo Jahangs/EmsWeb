@@ -10,6 +10,12 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using static NativeLinuxMethods;
+
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+using System.Text.Json;
+using System.Text;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -22,14 +28,14 @@ namespace EmsWeb.Controllers
     {
 
         private static EmsConfiguration EmsConfiguration { get; set; }
-        public IConfiguration Configuration { get;  set;}
-         private readonly ILogger<HomeController> _logger;
+        public IConfiguration Configuration { get; set; }
+        private readonly ILogger<HomeController> _logger;
         //---------------------------------------------------------------------
         public HomeController(ILogger<HomeController> logger)
         {
             Configuration = new ConfigurationBuilder()
            .AddJsonFile("EmsConfigs.json")
-           .Build(); 
+           .Build();
 
             _logger = logger;
         }
@@ -54,7 +60,21 @@ namespace EmsWeb.Controllers
         public string GetSettings() // Send data to service
         {
             return Startup._data;
-           // return Json(Startup._data);           
+        }
+        //---------------------------------------------------------------------
+        [HttpPost]
+        public string GetEmsLogs(string _log) // Get EMS logs
+        {
+            Console.WriteLine("=> Ems log is : " + _log);
+            Startup.EmsLogs = _log;
+
+            return "This is test data";
+        }
+        //---------------------------------------------------------------------
+        [HttpPost]
+        public string UpdatePageData()
+        {
+            return Startup.EmsLogs;
         }
         //---------------------------------------------------------------------
         [HttpGet]
@@ -72,7 +92,7 @@ namespace EmsWeb.Controllers
 
             Console.WriteLine("On Grid is sent");
 
-            DoForIPC("0");
+            DoForIPC("1");
 
             return Json("ok value changed to " + Startup._data); // Send data from view to my public variable as Json packet
         }
@@ -92,43 +112,7 @@ namespace EmsWeb.Controllers
 
             Console.WriteLine("Off Grid is sent");
 
-            DoForIPC("1");
-            return Json("ok value changed to " + Startup._data); // Send data from view to my public variable as Json packet
-        }
-        //---------------------------------------------------------------------
-        [HttpGet]
-        public ActionResult ActiveStartConverter(string _data)
-        {
-            using (var writer = new StreamWriter("EmsConfigs.json"))
-            {
-                writer.WriteLine("{");
-                writer.WriteLine("\"EmsConfigs\" : \"" + _data + "\"");
-
-                writer.WriteLine("}");
-            }
-
-            Startup._data = _data; // Write data from view to my public variable
-
-            Console.WriteLine("Start Converter is sent");
-
-            return Json("ok value changed to " + Startup._data); // Send data from view to my public variable as Json packet
-        }
-        //---------------------------------------------------------------------
-        [HttpGet]
-        public ActionResult ActiveStopConverter(string _data)
-        {
-            using (var writer = new StreamWriter("EmsConfigs.json"))
-            {
-                writer.WriteLine("{");
-                writer.WriteLine("\"EmsConfigs\" : \"" + _data + "\"");
-
-                writer.WriteLine("}");
-            }
-
-            Startup._data = _data; // Write data from view to my public variable
-
-            Console.WriteLine("Stop Converter is sent");
-
+            DoForIPC("0");
             return Json("ok value changed to " + Startup._data); // Send data from view to my public variable as Json packet
         }
         //---------------------------------------------------------------------
@@ -137,45 +121,6 @@ namespace EmsWeb.Controllers
             switch (_in)
             {
                 case "0":
-                    {
-                        Console.WriteLine("RECEIVED FROM WEB ====>>> OnGrid");
-
-                        try
-                        {
-                            var dir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "DeviceConfig");
-
-                            var configfiles = Directory.GetFiles("/opt/ems/DeviceConfig/", "*.json");
-                            foreach (var configfile in configfiles)
-                            {
-                                Console.WriteLine($"Found config file {configfile}");
-
-                                using (StreamReader jsonReader = new StreamReader(configfile))
-                                {
-                                    if (configfile.EndsWith("Ems.json"))
-                                    {
-                                        EmsConfiguration = JsonConvert.DeserializeObject<EmsConfiguration>(System.IO.File.ReadAllText(configfile));
-                                    }
-                                }
-
-                                Thread.Sleep(2000);
-                                using (StreamReader jsonReader = new StreamReader(configfile))
-                                {
-                                    if (configfile.EndsWith("Ems.json"))
-                                    {
-                                        EmsConfiguration.IsOffgrid = false;
-                                        UpdateConfigFile("Ems.json", EmsConfiguration);
-                                    }
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Error reading device config file: {ex.Message}");
-                        }
-
-                        break;
-                    }
-                case "1":
                     {
 
                         try
@@ -205,6 +150,46 @@ namespace EmsWeb.Controllers
                                 }
                             }
 
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error reading device config file: {ex.Message}");
+                        }
+
+                        break;
+                    }
+                case "1":
+                    {
+                        Console.WriteLine("RECEIVED FROM WEB ====>>> OnGrid");
+
+                        try
+                        {
+                            var dir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "DeviceConfig");
+
+                            var configfiles = Directory.GetFiles("/opt/ems/DeviceConfig/", "*.json");
+                            foreach (var configfile in configfiles)
+                            {
+                                Console.WriteLine($"Found config file {configfile}");
+
+                                using (StreamReader jsonReader = new StreamReader(configfile))
+                                {
+                                    if (configfile.EndsWith("Ems.json"))
+                                    {
+                                        EmsConfiguration = JsonConvert.DeserializeObject<EmsConfiguration>(System.IO.File.ReadAllText(configfile));
+                                    }
+                                }
+
+                                Thread.Sleep(2000);
+                                using (StreamReader jsonReader = new StreamReader(configfile))
+                                {
+                                    if (configfile.EndsWith("Ems.json"))
+                                    {
+                                        // EmsConfiguration = JsonConvert.DeserializeObject<EmsConfiguration>(File.ReadAllText(configfile));
+                                        EmsConfiguration.IsOffgrid = false;
+                                        UpdateConfigFile("Ems.json", EmsConfiguration);
+                                    }
+                                }
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -259,7 +244,7 @@ namespace EmsWeb.Controllers
         //---------------------------------------------------------------------
         private static void UpdateConfigFile(string fileName, object configuration)
         {
-           // var dir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "DeviceConfig/");
+            // var dir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "DeviceConfig/");
             var path = "/opt/ems/DeviceConfig/" + fileName;
 
             System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(configuration, Formatting.Indented));
